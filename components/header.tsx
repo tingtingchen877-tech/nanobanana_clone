@@ -1,9 +1,10 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/server"
+import { AuthButton } from "@/components/auth-button"
 
-export function Header() {
+export async function Header() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -39,14 +40,7 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm">
-            Sign In
-          </Button>
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Launch Now
-          </Button>
-        </div>
+        <AuthButton user={user} />
       </div>
     </header>
   )
